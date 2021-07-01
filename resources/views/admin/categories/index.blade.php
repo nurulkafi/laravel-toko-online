@@ -1,4 +1,5 @@
 @extends('admin.layouts.main')
+@section('Categories','active')
 @section('content')
 <div class="row" id="table-bordered">
     <div class="card">

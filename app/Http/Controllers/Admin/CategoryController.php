@@ -31,7 +31,8 @@ class CategoryController extends Controller
     public function create()
     {
         $title = "Add Categories";
-        return view('admin.categories.formAdd', compact('title'));
+        $data = Category::orderBy('name','ASC')->get();
+        return view('admin.categories.formAdd', compact('title','data'));
     }
 
     /**
@@ -45,7 +46,7 @@ class CategoryController extends Controller
         $title = "Add Categories";
         $categories = $request->categories;
         $slug = Str::slug($categories);
-        $parent_id = 0;
+        $parent_id = $request->parent;
         Category::create(
             [
                 'name' => $categories,
@@ -80,7 +81,8 @@ class CategoryController extends Controller
         //
         $data = Category::find($id);
         $title = "Edit Data";
-        return view('admin.categories.formEdit',compact('data','title'));
+        $data2 = Category::get();
+        return view('admin.categories.formEdit',compact('data','title','data2'));
     }
 
     /**
@@ -95,10 +97,11 @@ class CategoryController extends Controller
         $title = "Add Categories";
         $categories = $request->categories;
         $slug = Str::slug($categories);
-        $parent_id = 0;
+        $parent_id = $request->parent;
         Category::where('id',$id)->first()->update([
             'name' => $categories,
-            'slug' => $slug
+            'slug' => $slug,
+            'parent_id' => $parent_id
         ]);
         Alert::success('Update Data', 'Berhasil');
         return redirect('admin/categories');

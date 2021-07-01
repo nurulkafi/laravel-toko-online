@@ -19,6 +19,11 @@ Route::get('/', function () {
 });
 // Route::get('admin/dashboard',[DashboardController::class,'index']);
 
+Route::fallback(function(){
+    $title = "404 Not Found";
+    return view('admin.layouts.404',compact('title'));
+});
+
 Route::prefix('/admin')->group(function(){
     Route::get('dashboard',[DashboardController::class,'index']);
     //Route Kategori

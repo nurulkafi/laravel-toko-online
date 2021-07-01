@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('admin/assets/vendors/perfect-scrollbar/perfect-scrollbar.css')}}">
     <link rel="stylesheet" href="{{ asset('admin/assets/vendors/bootstrap-icons/bootstrap-icons.css')}}">
     <link rel="stylesheet" href="{{ asset('admin/assets/css/app.css')}}">
+    <link rel="stylesheet" href="{{ asset('admin/assets/css/pages/error.css')}}">
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     {{-- <link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap-icons.css')}}"> --}}
     <link rel="shortcut icon" href="{{ asset('admin/assets/images/favicon.svg')}}" type="image/x-icon">
