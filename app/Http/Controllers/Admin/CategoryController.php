@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Str;
 
@@ -31,8 +32,9 @@ class CategoryController extends Controller
     public function create()
     {
         $title = "Add Categories";
-        $data = Category::orderBy('name','ASC')->get();
+        $data = Category::get()->where('parent_id',0);
         return view('admin.categories.formAdd', compact('title','data'));
+
     }
 
     /**
@@ -47,6 +49,9 @@ class CategoryController extends Controller
         $categories = $request->categories;
         $slug = Str::slug($categories);
         $parent_id = $request->parent;
+        $request->validate([
+            'categories' => 'required|unique:categories,name'
+        ]);
         Category::create(
             [
                 'name' => $categories,
@@ -81,7 +86,7 @@ class CategoryController extends Controller
         //
         $data = Category::find($id);
         $title = "Edit Data";
-        $data2 = Category::get();
+        $data2 = Category::get()->where('parent_id',0);
         return view('admin.categories.formEdit',compact('data','title','data2'));
     }
 

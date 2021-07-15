@@ -262,4 +262,7 @@
                         </div>
                     </div>
                 </section>
+    @push('dashboard')
+        <script src="{{ asset('admin/assets/js/pages/dashboard.js')}}"></script>
+    @endpush
 @endsection

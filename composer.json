@@ -9,14 +9,17 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "laravel-lang/lang": "~7.0",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
-        "realrashid/sweet-alert": "^4.0"
+        "realrashid/sweet-alert": "^4.0",
+        "spatie/laravel-permission": "^4.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
+        "laravel/ui": "3.0",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
         "phpunit/phpunit": "^9.3.3"

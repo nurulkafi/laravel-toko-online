@@ -29,7 +29,7 @@
                         @endphp
                         @foreach ($data as $item)
                         <tr>
-                            <td>{{ $i++ }}</td>
+                            <td>{{ $item->id }}</td>
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->slug }}</td>
                             <td>{{ $item->parent_id }}</td>
@@ -74,6 +74,4 @@
         </div>
     </div>
 </div>
-
-
 @endsection
