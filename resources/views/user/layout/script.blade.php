@@ -7,4 +7,5 @@
 <!-- SLIDER REVOLUTION 4.x SCRIPTS  -->
 <script type="text/javascript" src="{{ asset('user/rs-plugin/js/jquery.tp.t.min.js')}}"></script>
 <script type="text/javascript" src="{{ asset('user/rs-plugin/js/jquery.tp.min.js')}}"></script>
+@stack('detailproduct')
 <script src="{{ asset('user/js/main.js')}}"></script>

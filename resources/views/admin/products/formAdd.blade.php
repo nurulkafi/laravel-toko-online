@@ -36,6 +36,10 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
+                                    <label for="deskripsi">Short description</label>
+                                    <textarea type="text" class="form-control round" name="short_description"  id="ed2itor"></textarea>
+                                </div>
+                                <div class="form-group">
                                     <label for="deskripsi">Deskripsi</label>
                                     <textarea type="text" class="form-control round" name="description"  id="editor"></textarea>
                                 </div>
@@ -64,31 +68,8 @@
                                     <h4>Product Variant</h4>
                                 </div>
                                 <div class="form-group">
-                                    <label for="">Color</label>
-                                    <input type="text" id="color" class="form-control">
-                                </div>
-                                <div class="form-group">
                                     <label for="">Size</label>
-                                    <select name="" id="size" class="form-select">
-                                        <option value="XS">XS</option>
-                                        <option value="S">S</option>
-                                        <option value="L">L</option>
-                                        <option value="XL">XL</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Type</label>
-                                    <br>
-                                    <input type="radio" class="btn-check" name="tipe" id="short"
-                                    autocomplete="off" value="short">
-                                    <label class="btn btn-outline-dark" for="short">Short</label>
-
-                                    <input type="radio" class="btn-check" name="tipe"  id="Long"
-                                        autocomplete="off" value="long">
-                                    <label class="btn btn-outline-dark" for="Long">Long</label>
-                                    <input type="radio" class="btn-check"name="tipe"  id="No"
-                                        autocomplete="off" value=" ">
-                                    <label class="btn btn-outline-dark" for="No">No Type</label>
+                                    <input type="text" id="size" name="size" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Harga</label>
@@ -104,9 +85,7 @@
                                 <table id="variant_table" class="table table-bordered mb-0">
                                     <tr>
                                         <td>No</td>
-                                        <td>Color</td>
                                         <td>Size</td>
-                                        <td>Type</td>
                                         <td>Harga</td>
                                         <td>Qty</td>
                                         <td>Action</td>
@@ -162,49 +141,27 @@
         });
         $('#btnAdd').on('click',function () {
             no = no+1;
-            color = $('#color').val();
-            size = $('#size').children('option:selected').val();
-            tipeselect = $("input[name='tipe']:checked").val();
+            size = $('#size').val()
             harga = $('#harga').val();
             qty = $('#qty').val();
             action = '<button id="btnRemove" class="btn icon btn-danger"><i class="bi bi-trash"></i></button>';
 
-            optionidcolor = '<input type="hidden"  value="1" name="option_id[]">';
-            valueIDcolor = '<input type="hidden"  value="'+(index+1)+'" name="value_id[]">';
-            valueNamecolor = '<input  type="hidden" value="'+color+'" name="value_name[]">';
-
-            optionidsize = '<input type="hidden"  value="2" name="option_id[]">';
-            valueIDsize = '<input type="hidden"  value="'+(index+2)+'" name="value_id[]">';
-            valueNamesize = '<input  type="hidden" value="'+size+'" name="value_name[]">';
-            if(tipeselect === undefined || tipeselect === " " || tipeselect === ""){
-                tipeselect = " "
-                optionidtype = '<input type="hidden"  value="0" name="option_id[]">';
-                valueIDtype = '<input type="hidden"  value="0" name="value_id[]">';
-                valueNametype = '<input  type="hidden" value="0" name="value_name[]">';
-            }else{
-                optionidtype = '<input type="hidden"  value="3" name="option_id[]">';
-                valueIDtype = '<input type="hidden"  value="'+(index+3)+'" name="value_id[]">';
-                valueNametype = '<input  type="hidden" value="'+tipeselect+'" name="value_name[]">';
-            }
             inputHarga = '<input type="hidden"  value="'+harga+'" name="price[]">';
             inputqty = '<input type="hidden"  value="'+qty+'" name="qty[]">';
+            inputSize = '<input type="hidden"  value="'+size+'" name="size[]">';
 
             all = '<tr>';
             all += '<td>' +no+ '</td>'
-            all += '<td>' +color+ optionidcolor + valueIDcolor+valueNamecolor+'</td>'
-            all += '<td>' +size+ optionidsize + valueIDsize+valueNamesize+'</td>'
-            all += '<td>' +tipeselect+optionidtype + valueIDtype+valueNametype+ '</td>'
+            all += '<td>' +size+ inputSize+'</td>'
             all += '<td>' +harga+inputHarga+'</td>'
             all += '<td>' +qty+inputqty+'</td>'
             all += '<td>' +action+'</td>'
             all += '</tr>'
 
             $('#variant_table').append(all);
-                index = index+3;
             });
         $("#variant_table").on("click", "#btnRemove", function() {
             $(this).closest("tr").remove();
-            index = index-3;
             no = no-1;
         });
         // $('#btnAdd').on('click',function(){

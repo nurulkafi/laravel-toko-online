@@ -22,26 +22,33 @@
                         </li>
                         <li class="sidebar-item @yield('Categories')">
                             <a href="{{ url('admin/categories') }}" class='sidebar-link'>
-                                <i class="bi bi-list-ul"></i>
+                                <i class="bi bi-list"></i>
                                 <span>Categories</span>
                             </a>
                         </li>
                         <li class="sidebar-item @yield('Product')">
                             <a href="{{ url('admin/product') }}" class='sidebar-link'>
-                                <i class="bi bi-box"></i>
-                                <span>Product</span>
+                                <i class="bi bi-folder-fill"></i>
+                                <span>Products</span>
                             </a>
+                        </li>
+                        <li class="sidebar-item @yield('Orders') @yield('sub') ">
+                            <a href="{{ url('admin/order') }}" class='sidebar-link'>
+                                <i class="bi bi-cart-fill"></i>
+                                <span>Orders</span>
+                            </a>
+                            @yield('submenu')
                         </li>
                         <li class="sidebar-title">Users & Roles</li>
                         <li class="sidebar-item @yield('Users')">
                             <a href="{{ url('admin/users') }}" class='sidebar-link'>
-                                <i class="bi bi-users"></i>
+                                <i class="bi bi-person-fill"></i>
                                 <span>Users</span>
                             </a>
                         </li>
                         <li class="sidebar-item @yield('Role')">
                             <a href="{{ url('admin/role') }}" class='sidebar-link'>
-                                <i class="bi bi-box"></i>
+                                <i class="bi bi-lock-fill"></i>
                                 <span>Role</span>
                             </a>
                         </li>

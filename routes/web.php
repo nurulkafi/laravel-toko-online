@@ -3,10 +3,17 @@
 use App\Http\Controllers\Admin\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\ShipmentController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use Illuminate\Auth\Middleware\Authenticate;
 /*
@@ -20,8 +27,8 @@ use Illuminate\Auth\Middleware\Authenticate;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/home', function () {
+    return redirect('admin/dashboard');
 });
 // Route::get('admin/dashboard',[DashboardController::class,'index']);
 
@@ -30,8 +37,12 @@ Route::fallback(function () {
     $title = "404 Not Found";
     return view('admin.layouts.404', compact('title'));
 });
+Route::get('logout', function () {
+    \Auth::logout();
+    return redirect('login');
+});
 
-Route::group(['middleware' => ['auth']],function () {
+Route::group(['middleware' => ['role:Admin|Operator']],function () {
     Route::prefix('/admin')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index']);
         //Route Kategori
@@ -66,10 +77,44 @@ Route::group(['middleware' => ['auth']],function () {
         Route::get('users/add', [UsersController::class, 'create']);
         Route::post('users/add_data', [UsersController::class, 'store']);
 
-        //product for user
+        //admin-orders
+        Route::get('order',[AdminOrderController::class,'index'])->name('orders.index');
+        Route::get('order/show/{id}', [AdminOrderController::class, 'show']);
+        Route::get('order/process/{id}', [AdminOrderController::class, 'process']);
 
-    });
+        Route::get('order/shipment/{id}',[ShipmentController::class,'index']);
+        Route::post('order/shipment/save/{id}', [ShipmentController::class, 'store']);
+        });
 });
+//Product For User
 Route::get('product', [ControllersProductController::class, 'index']);
+Route::post('product/search',[ControllersProductController::class,'searchForm']);
+Route::get('product/search/{id}', [ControllersProductController::class, 'resultSearch']);
 Route::get('product/detail/{slug}',[ControllersProductController::class, 'show']);
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('product/detail/search/{id}', [ControllersProductController::class, 'searchPriceAndQty']);
+
+//Cart
+Route::get('cart',[CartController::class,'index']);
+Route::group(['middleware' => ['auth']],function () {
+    Route::post('cart/add',[CartController::class,'store']);
+    Route::get('checkout',[OrderController::class,'index']);
+});
+//Api Raja Ongkir
+Route::get('province/search/{id}', [ControllersProductController::class, 'searchCity']);
+Route::get('cekongkir/{id}/berat/{berat}/kurir/{kurir}', [ControllersProductController::class, 'cekOngkir']);
+
+//Register
+Route::post('user/register',[CustomerController::class,'store']);
+// Route::get('register',[RegisterController::class,'index']);
+// Route::group(['middleware' => ['role:customer']],function () {
+
+Route::POST('coba', [OrderController::class, 'doCheckout']);
+Route::get('order/confirm/{id}',[OrderController::class,'confirm']);
+// });
+
+Route::POST('/payment/notification', [PaymentController::class, 'notification']);
+Route::get('completed', [PaymentController::class, 'completed']);
+Route::get('failed', [PaymentController::class, 'failed']);
+Route::get('unfinish', [PaymentController::class, 'unfinish']);
+
+

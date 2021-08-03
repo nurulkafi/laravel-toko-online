@@ -6,14 +6,17 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "darryldecode/cart": "^4.2",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel-lang/lang": "~7.0",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
+        "midtrans/midtrans-php": "^2.4",
         "realrashid/sweet-alert": "^4.0",
-        "spatie/laravel-permission": "^4.2"
+        "spatie/laravel-permission": "^4.2",
+        "yajra/laravel-datatables": "1.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

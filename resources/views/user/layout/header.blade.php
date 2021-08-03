@@ -46,42 +46,49 @@
             <ul class="navbar-right">
 
               <!-- USER INFO -->
+              @auth
               <li class="dropdown user-acc"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" ><i class="icon-user"></i> </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <h6>HELLO! Jhon Smith</h6>
+                    <h6>HELLO! {{ Auth::user()->name }}</h6>
                   </li>
                   <li><a href="#">MY CART</a></li>
                   <li><a href="#">ACCOUNT INFO</a></li>
-                  <li><a href="#">LOG OUT</a></li>
+                  <li><a href="#">ORDER INFO</a></li>
+                  <li><a href="{{ url('logout') }}">LOG OUT</a></li>
                 </ul>
               </li>
-
+              @endauth
+              @guest
+                <li class="dropdown user-acc"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" ><i class="icon-user"></i> </a>
+                <ul class="dropdown-menu">
+                  <li><a href="{{ url('login') }}">Login</a></li>
+                  <li><a href="{{ url('register') }}">Register</a></li>
+                </ul>
+              </li>
+              @endguest
               <!-- USER BASKET -->
               <li class="dropdown user-basket"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true"><i class="icon-basket-loaded"></i> </a>
                 <ul class="dropdown-menu">
+                  @foreach ($cart as $item)
+                  @php
+                    $product = $item->associatedModel;
+                  @endphp
                   <li>
                     <div class="media-left">
-                      <div class="cart-img"> <a href="#"> <img class="media-object img-responsive" src="images/cart-img-1.jpg" alt="..."> </a> </div>
+                      <div class="cart-img"> <a href="#"> <img class="media-object img-responsive" src="{{ asset('storage/'.$product->productImage->first()->path) }}" alt="..."> </a> </div>
                     </div>
                     <div class="media-body">
-                      <h6 class="media-heading">WOOD CHAIR</h6>
-                      <span class="price">129.00 USD</span> <span class="qty">QTY: 01</span> </div>
+                      <h6 class="media-heading">{{ $item->name }} {{ $item->attributes[0] }}</h6>
+                      <span class="price">Rp. {{ number_format($item->price) }}</span> <span class="qty">QTY: {{ $item->quantity }}</span> </div>
                   </li>
+                  @endforeach
                   <li>
-                    <div class="media-left">
-                      <div class="cart-img"> <a href="#"> <img class="media-object img-responsive" src="images/cart-img-2.jpg" alt="..."> </a> </div>
-                    </div>
-                    <div class="media-body">
-                      <h6 class="media-heading">WOOD STOOL</h6>
-                      <span class="price">129.00 USD</span> <span class="qty">QTY: 01</span> </div>
-                  </li>
-                  <li>
-                    <h5 class="text-center">SUBTOTAL: 258.00 USD</h5>
+                    <h5 class="text-center">SUBTOTAL: Rp.{{ number_format(\Cart::getSubTotal()) }}</h5>
                   </li>
                   <li class="margin-0">
                     <div class="row">
-                      <div class="col-xs-6"> <a href="shopping-cart.html" class="btn">VIEW CART</a></div>
+                      <div class="col-xs-6"> <a href="{{ url('cart') }}" class="btn">VIEW CART</a></div>
                       <div class="col-xs-6 "> <a href="checkout.html" class="btn">CHECK OUT</a></div>
                     </div>
                   </li>
@@ -94,8 +101,9 @@
                   <div class="search-overlay"></div>
                   <div class="position-center-center">
                     <div class="search">
-                      <form>
-                        <input type="search" placeholder="Search Shop">
+                      <form method="POST" action="{{ url('product/search') }}">
+                        @csrf
+                        <input type="text" placeholder="Search Shop" name="searchName">
                         <button type="submit"><i class="icon-check"></i></button>
                       </form>
                     </div>

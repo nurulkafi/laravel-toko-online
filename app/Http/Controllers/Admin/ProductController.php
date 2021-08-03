@@ -36,7 +36,7 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function sku($index){
-        $sku = DB::table('product_skus')->orderBy('sku', 'DESC')->first();
+        $sku = DB::table('product_atributes')->orderBy('sku', 'DESC')->first();
 
         if ($sku != null) {
             $urutan = substr($sku->sku, 3, 3);
@@ -56,9 +56,7 @@ class ProductController extends Controller
 
         $title = "Add Product";
         $data = Category::get()->where('parent_id',0);
-        $opt = DB::table('product_options')->orderBy('id','ASC')->get();
-
-        return view('admin.products.formAdd',compact('title','data','opt'));
+        return view('admin.products.formAdd',compact('title','data'));
 
     }
 
@@ -76,6 +74,7 @@ class ProductController extends Controller
         $slug = Str::slug($name);
         $weight = $request->weight;
         $description = $request->description;
+        $short_description = $request->short_description;
         $status = $request->status;
         $saved = Product::create([
             'user_id' => $user_id,
@@ -83,6 +82,7 @@ class ProductController extends Controller
             'name' => $name,
             'slug' => $slug,
             'weight' => $weight,
+            'short_description' => $short_description,
             'description' => $description,
             'status' => $status
         ]);
@@ -106,40 +106,15 @@ class ProductController extends Controller
                     'path' => $filepath
                 ]);
             }
-            $optionID = $request->option_id;
-            $valueID = $request->value_id;
-            $valueName = $request->value_name;
             $price = $request->price;
             $qty = $request->qty;
-            for ($i = 0; $i < count($optionID); $i++) {
-                if ($valueName[$i] != "0" && $valueID != "0") {
-                    DB::insert(
-                        'insert into product_option_values (product_id, product_option_id,name)
-                        values (?, ? ,? )',
-                        [$data->id, $optionID[$i], $valueName[$i]]
-                    );
-                }
-            }
+            $size = $request->size;
 
-            for ($j = 0; $j < count($price); $j++) {
-                $index = 1;
-                $in = $j * 3;
-                DB::insert(
-                    'insert into product_skus (product_id,sku,price,qty)
-                    values (?,?,?,?)',
-                    [$data->id, $this->sku($index), $price[$j], $qty[$j]]
-                );
-                $product_option_id = DB::table('product_option_values')->where('product_id', $data->id)->get();
-                $poduct_sku_id = DB::table('product_skus')->where('product_id',$data->id)->get();
-                for ($k = $in; $k < 3 * ($j + 1); $k++) {
-                    if ($valueName[$k] != "0") {
-                        DB::insert(
-                            'insert into product_skus_values (product_id,product_sku_id,product_option_id,product_option_value_id)
-                        values (?,?,?,?)',
-                                [$data->id,$poduct_sku_id[$j]->id, $optionID[$k], $product_option_id[$k]->id]
-                            );
-                    }
-                }
+            for ($i=0; $i < count($size) ; $i++) {
+                $index = $i+1;
+                DB::insert('insert into product_atributes (product_id, sku,price,qty,size)
+                            values (?, ?,?,?,?)',
+                            [$data->id, $this->sku($index),$price[$i],$qty[$i],$size[$i]]);
             }
             Alert::success('Tambah Data', 'Behasil!');
             return redirect('admin/product');

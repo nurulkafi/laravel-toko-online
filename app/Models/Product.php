@@ -31,10 +31,14 @@ class Product extends Model
     }
 
     public function productPriceMax(){
-        return $this->hasMany('App\Models\ProductSku')->orderBy('price','Desc');
+        return $this->hasMany('App\Models\ProductAtribute')->orderBy('price','Desc');
     }
     public function productPriceMin()
     {
-        return $this->hasMany('App\Models\ProductSku')->orderBy('price', 'ASC');
+        return $this->hasMany('App\Models\ProductAtribute')->orderBy('price', 'ASC');
+    }
+    public function productAtribute()
+    {
+        return $this->hasMany('App\Models\ProductAtribute');
     }
 }

@@ -28,6 +28,7 @@ class HomeController extends Controller
     {
         $product = Product::get();
         $category = Category::get()->where('parent_id',0);
-        return view('user.home',compact('product','category'));
+        $cart = \Cart::getContent();
+        return view('user.home',compact('product','cart','category'));
     }
 }

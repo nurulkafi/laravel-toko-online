@@ -5,9 +5,11 @@
       <div class="container">
 
         <!-- SHOP DETAIL -->
+        <form action="{{ url('cart/add') }}" method="POST">
+            @csrf
         <div class="shop-detail">
           <div class="row">
-
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
             <!-- Popular Images Slider -->
             <div class="col-md-7">
 
@@ -24,11 +26,11 @@
             <!-- COntent -->
             <div class="col-md-5">
               <h4>{{ $product->name }}</h4>
-              <span class="price"><small>Rp</small>{{ $product->productPriceMax->first()->price }}</span>
+              <span class="price" id="price"><small>Rp</small>{{ $product->productPriceMax->first()->price }}</span>
               <!-- Sale Tags -->
               <ul class="item-owner">
                 <li>Designer :<span> ABC Art</span></li>
-                <li>Brand:<span> LimeWood</span></li>
+                <li>Stock :<span style="font-size: 20px;font-weight: bold" id="stock"> {{ $product->productPriceMax->first()->qty }}</span></li>
               </ul>
 
               <!-- Item Detail -->
@@ -39,54 +41,86 @@
               <!-- Short By -->
               <div class="some-info">
                 <ul class="row margin-top-30">
-                  <li class="col-xs-4">
+                    <li class="col-xs-4">Qty</li>
+                    <li class="col-xs-4">Size</li>
+                    <li class="col-xs-4">&nbsp;</li>
+                    <li class="col-xs-4">
                     <div class="quinty">
                       <!-- QTY -->
-                      <select class="selectpicker">
+                      <input type="text" name="qty" style="border:0.5px solid black" class="form-control">
+                      {{-- <select class="selectpicker">
                         <option>1</option>
                         <option>2</option>
                         <option>3</option>
-                      </select>
+                      </select> --}}
                     </div>
                   </li>
-
-                  <!-- COLORS -->
-                  <li class="col-xs-8">
-                    <ul class="colors-shop">
-                      <li><span class="margin-right-20">Colors</span></li>
-                      <li><a href="#." style="background:#958170;"></a></li>
-                      <li><a href="#." style="background:#c9a688;"></a></li>
-                      <li><a href="#." style="background:#c9c288;"></a></li>
-                      <li><a href="#." style="background:#a7c988;"></a></li>
-                      <li><a href="#." style="background:#9ed66b;"></a></li>
-                      <li><a href="#." style="background:#6bd6b1;"></a></li>
-                      <li><a href="#." style="background:#82c2dc;"></a></li>
-                      <li><a href="#." style="background:#8295dc;"></a></li>
-                    </ul>
-                  </li>
-
+                  <li class="col-xs-4">
+                    <div class="quinty">
+                      <!-- QTY -->
+                      <select class="selectpicker" name="atribut_id" id="size">
+                        @foreach ($product->productAtribute as $item)
+                            <option data-id="{{ $item->id }}" value="{{ $item->id }}">{{ $item->size }}</option>
+                        @endforeach
+                      </select>
+                    </div>
+                  </li
                   <!-- ADD TO CART -->
-                  <li class="col-xs-6"> <a href="#." class="btn">ADD TO CART</a> </li>
+                  <li class="col-xs-4"> <a href="#." class="like-us"><i class="icon-heart"></i></a> </li>
+                  <li class="col-xs-12"> <button type="submit" class="btn">ADD TO CART</button> </li>
 
                   <!-- LIKE -->
-                  <li class="col-xs-6"> <a href="#." class="like-us"><i class="icon-heart"></i></a> </li>
                 </ul>
 
                 <!-- INFOMATION -->
                 <div class="inner-info">
                   <h6>DELIVERY INFORMATION</h6>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum finibus ligula a scelerisque gravida. Nullam laoreet tortor ac maximus alique met, consectetur adipiscing elit. </p>
-                  <h6>SHIPPING & RETURNS</h6>
-                  <h6>SHARE THIS PRODUCT</h6>
 
-                  <!-- Social Icons -->
-                  <ul class="social_icons">
-                    <li><a href="#."><i class="icon-social-facebook"></i></a></li>
-                    <li><a href="#."><i class="icon-social-twitter"></i></a></li>
-                    <li><a href="#."><i class="icon-social-tumblr"></i></a></li>
-                    <li><a href="#."><i class="icon-social-youtube"></i></a></li>
-                    <li><a href="#."><i class="icon-social-dribbble"></i></a></li>
-                  </ul>
+                  <p>
+                      <div class="row">
+                          <div class="col-md-6">
+                              <h6>From</h6>
+                              <div class="form-group">
+                                  <p for="">Provinsi</p>
+                                  <input type="text" disabled class="form-control" placeholder="Jawa Barat">
+                              </div>
+                              <div class="form-group">
+                                  <p for="">Kabupaten</p>
+                                  <input type="text" disabled class="form-control" placeholder="Bandung">
+                              </div>
+                              <div class="form-group">
+                                  <p>Courier </p>
+
+                                  <select name="" id="kurir" class="form-control">
+                                    <option value="">
+                                    </option>
+                                  </select>
+
+                              </div>
+                            </div>
+                          <div class="col-md-6">
+                              <h6>To</h6>
+
+                              <div class="form-group">
+                                  <p for="">Provinsi</p>
+                                  <select name="" id="provinsiTujuan"  class="form-control">
+                                      @foreach ($province as $item)
+                                          <option value="{{ $item->code }}">{{ $item->title }}</option>
+                                      @endforeach
+                                  </select>
+                              </div>
+                              <div class="form-group">
+                                  <p for="">Kabupaten / Kota</p>
+                                  <select name="" id="kotaTujuan"  class="form-control">
+                                    <option value="">&nbsp;</option>
+                                  </select>
+                              </div>
+                              <div class="form-group">
+                                  <p id="total_ongkir" style="font-size: 15px;margin-top:40px">Ongkos Kirim : Rp.50000</p>
+                              </div>
+                          </div>
+                      </div>
+                  </p>
                 </div>
               </div>
             </div>
@@ -199,6 +233,7 @@
             <div role="tabpanel" class="tab-pane fade" id="tags"> </div>
           </div>
         </div>
+        </form>
       </div>
     </section>
 
@@ -214,79 +249,97 @@
 
         <!-- Popular Item Slide -->
         <div class="papular-block block-slide single-img-demos">
-
+          @foreach ($productsame as $item)
           <!-- Item -->
           <div class="item">
             <!-- Item img -->
-            <div class="item-img"> <img class="img-1" src="images/product-1.jpg" alt="" >
+            <div class="item-img"> <img class="img-1" src="{{ url('storage/'.$item->productImage->first()->path) }}" alt="" >
               <!-- Overlay -->
               <div class="overlay">
                 <div class="position-center-center">
-                  <div class="inn"><a href="images/product-1.jpg" data-lighter><i class="icon-magnifier"></i></a> <a href="#."><i class="icon-basket"></i></a> <a href="#." ><i class="icon-heart"></i></a></div>
+                  <div class="inn"><a href="{{ url('storage/'.$item->productImage->first()->path) }}" data-lighter><i class="icon-magnifier"></i></a> <a href="{{ url('product/detail/'.$item->slug) }}"><i class="icon-basket"></i></a> <a href="#." ><i class="icon-heart"></i></a></div>
                 </div>
               </div>
             </div>
             <!-- Item Name -->
-            <div class="item-name"> <a href="#.">stone cup</a>
-              <p>Lorem ipsum dolor sit amet</p>
+            <div class="item-name"> <a href="#.">{{ $item->name }}</a>
+              <p>{{ $item->short_description }}</p>
             </div>
             <!-- Price -->
-            <span class="price"><small>$</small>299</span> </div>
+            <span class="price"><small>Rp</small>{{ $item->productPriceMin->first()->price }}</span>
+            </div>
 
-          <!-- Item -->
-          <div class="item">
-            <!-- Item img -->
-            <div class="item-img"> <img class="img-1" src="images/product-2.jpg" alt="" >
-              <!-- Overlay -->
-              <div class="overlay">
-                <div class="position-center-center">
-                  <div class="inn"><a href="images/product-2.jpg" data-lighter><i class="icon-magnifier"></i></a> <a href="#."><i class="icon-basket"></i></a> <a href="#." ><i class="icon-heart"></i></a></div>
-                </div>
-              </div>
-            </div>
-            <!-- Item Name -->
-            <div class="item-name"> <a href="#.">gray bag</a>
-              <p>Lorem ipsum dolor sit amet</p>
-            </div>
-            <!-- Price -->
-            <span class="price"><small>$</small>299</span> </div>
-
-          <!-- Item -->
-          <div class="item">
-            <!-- Item img -->
-            <div class="item-img"> <img class="img-1" src="images/product-3.jpg" alt="" >
-              <!-- Overlay -->
-              <div class="overlay">
-                <div class="position-center-center">
-                  <div class="inn"><a href="images/product-3.jpg" data-lighter><i class="icon-magnifier"></i></a> <a href="#."><i class="icon-basket"></i></a> <a href="#." ><i class="icon-heart"></i></a></div>
-                </div>
-              </div>
-            </div>
-            <!-- Item Name -->
-            <div class="item-name"> <a href="#.">chiar</a>
-              <p>Lorem ipsum dolor sit amet</p>
-            </div>
-            <!-- Price -->
-            <span class="price"><small>$</small>299</span> </div>
-
-          <!-- Item -->
-          <div class="item">
-            <!-- Item img -->
-            <div class="item-img"> <img class="img-1" src="images/product-4.jpg" alt="" >
-              <!-- Overlay -->
-              <div class="overlay">
-                <div class="position-center-center">
-                  <div class="inn"><a href="images/product-4.jpg" data-lighter><i class="icon-magnifier"></i></a> <a href="#."><i class="icon-basket"></i></a> <a href="#." ><i class="icon-heart"></i></a></div>
-                </div>
-              </div>
-            </div>
-            <!-- Item Name -->
-            <div class="item-name"> <a href="#.">STool</a>
-              <p>Lorem ipsum dolor sit amet</p>
-            </div>
-            <!-- Price -->
-            <span class="price"><small>$</small>299</span> </div>
+          @endforeach
         </div>
       </div>
     </section>
+@push('detailproduct')
+<script>
+     $(document).ready(function () {
+        $('#size').on('change',function () {
+            let sku = $(this).val();
+            $.ajax({
+                url: '/product/detail/search/'+sku,
+                data: {id : sku},
+                type: 'get',
+                dataType: 'json',
+                success:function(data) {
+                    $('#price').html("<small>Rp</small>" + data.price),
+                    $('#stock').html(data.qty)
+                }
+            });
+        });
+        $('#provinsiTujuan').on('change',function(){
+            let id = $(this).val();
+                $.ajax({
+                    url: '/province/search/'+id,
+                    type: 'get',
+                    dataType: 'json',
+                    success:function(data) {
+                        $('#kotaTujuan').empty();
+                        $('#kotaTujuan').append(`<option value="">Kabupaten . . . . . . . </option>`);
+                        $.each(data, function(key, value){
+                            $('#kotaTujuan').append(`<option value="${key}"> ${value} </option>`);
+                        });
+                },
+                });
+        });
+        $('#kotaTujuan').on('change',function(){
+            $('#kurir').empty();
+            let tujuan = $('#kotaTujuan').children("option:selected").val();
+            let berat = {{ $product->weight }};
+            $.ajax({
+                url: '/cekongkir/'+tujuan+'/berat/'+berat+'/kurir/'+'jne',
+                type: 'get',
+                dataType: 'json',
+                success:function(data) {
+                    // $('#total_ongkir').html("Ongkos Kirim : Rp."+data);
+                    // $.each(response[0]['costs'].results, function(key,result) {
+                    //     console.log(result.service)
+                    // })
+                    for (let index = 0; index < 3; index++) {
+                        let kurir = data[index].results[0].code.toUpperCase();
+                        $.each(data[index].results[0].costs, function(key,result) {
+                            $('#kurir').append('<option>'+ kurir+" "+result.service+" | "+result.cost[0].value+'</option>')
+                        })
+                    }
+                }
+            });
+        });
+        $('#kurir').on('change',function(){
+            let tujuan = $('#kotaTujuan').children("option:selected").val();
+            let kurir = $('#kurir').children("option:selected").val();
+            let berat = {{ $product->weight }};
+            $.ajax({
+                url: '/cekongkir/'+tujuan+'/berat/'+berat+'/kurir/'+kurir,
+                type: 'get',
+                dataType: 'json',
+                success:function(data) {
+                    $('#total_ongkir').html("Ongkos Kirim : Rp."+data);
+                }
+            });
+        });
+    });
+</script>
+@endpush
 @endsection

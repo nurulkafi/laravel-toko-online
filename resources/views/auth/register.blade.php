@@ -1,77 +1,142 @@
-@extends('layouts.app')
+@extends('user.layout.main')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
+  <!-- Content -->
+  <div id="content">
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
-                        @csrf
+    <!--======= PAGES INNER =========-->
+    <section class="chart-page padding-top-100 padding-bottom-100">
+      <div class="container">
 
-                        <div class="form-group row">
-                            <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
+        <!-- Payments Steps -->
+        <div class="shopping-cart">
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+          <!-- SHOPPING INFORMATION -->
+          <div class="cart-ship-info register">
+            <div class="row">
 
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+              <!-- ESTIMATE SHIPPING & TAX -->
+              <div class="col-sm-12">
+                <h6>REGISTER</h6>
+                <form action="{{ url('user/register') }}" method="POST">
+                    @csrf
+                  <ul class="row">
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                    <!-- Name -->
+                    <li class="col-md-6">
+                      <label> *FIRST NAME
+                        <input type="text" name="first_name" value="{{ old('first_name') }}" placeholder="">
+                      </label>
+                      @error('first_name')
+                        {{ "*".$message }}
+                      @enderror
+                    </li>
+                    <!-- LAST NAME -->
+                    <li class="col-md-6">
+                      <label> *EMAIL ADDRESS
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="">
+                      </label>
+                      @error('email')
+                        {{ "*".$message }}
+                      @enderror
+                    </li>
+                    <li class="col-md-6">
+                      <label> *LAST NAME
+                        <input type="text" name="last_name" value="{{ old('last_name') }}" placeholder="">
+                      </label>
+                      @error('last_name')
+                        {{ "*".$message }}
+                      @enderror
+                    </li>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+                    <!-- PHONE -->
+                    <li class="col-md-6">
+                      <label> *PASSWORD
+                        <input type="password" name="password" value="{{ old('password') }}" placeholder="">
+                      </label>
+                       @error('password')
+                        {{ "*".$message }}
+                       @enderror
+                    </li>
+                    <li class="col-md-6">
+                      <label> *PHONE
+                        <input type="text" name="phone" value="{{ old('phone') }}" placeholder="">
+                        </label>
+                    @error('phone')
+                        {{ "*".$message }}
+                    @enderror
+                    </li>
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+                    <!-- LAST NAME -->
 
-                        <div class="form-group row">
-                            <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                    <!-- LAST NAME -->
+                    <li class="col-md-6">
+                      <label> *CONFIRM-PASSWORD
+                        <input type="password" name="confirmed-password" value="" placeholder="">
+                      </label>
+                      @error('confirmed-password')
+                        {{ "*".$message }}
+                    @enderror
+                    </li>
+                    <li class="col-md-6">
+                        <!-- ADDRESS -->
+                        <label>*PROVINCE
+                            <select name="" id="provinsiTujuan"  class="selectpicker">
+                                      @foreach ($province as $item)
+                                          <option value="{{ $item->code }}">{{ $item->title }}</option>
+                                      @endforeach
+                            </select>
+                        </label>
+                    </li>
+                    <li class="col-md-6">
+                      <!-- ADDRESS -->
+                      <label>*CITY
+                        <select name="city_id" id="kotaTujuan"  class="selectpicker">
+                                    <option value="{{ old('first_name') }}">&nbsp;</option>
+                        </select>
+                      </label>
+                    </li>
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                    <!-- COUNTRY -->
+                    <li class="col-md-12">
+                      <label> *ADDRESS
+                        <textarea name="address" style="border: 0.5px solid black;border-radius: 0%;margin-top:10px" class="form-control" name="address" id="message" rows="5" placeholder="">{{ old('address') }}</textarea>
+                      </label>
+                    </li>
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
 
-                        <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Register') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    <!-- PHONE -->
+                    <li class="col-md-6">
+                      <button type="submit" class="btn">REGISTER NOW</button>
+                    </li>
+                  </ul>
+                </form>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
+    </section>
+@push('detailproduct')
+<script>
+    $(document).ready(function () {
+        $('#provinsiTujuan').on('change',function(){
+            let id = $(this).val();
+                $.ajax({
+                    url: '/province/search/'+id,
+                    type: 'get',
+                    dataType: 'json',
+                    success:function(data) {
+                        $('#kotaTujuan').empty();
+                        $.each(data, function(key, value){
+                            $('#kotaTujuan').append(`<option value="${key}"> ${value} </option>`);
+                        });
+                        $('#kotaTujuan').selectpicker('refresh');
+                },
+                });
+        });
+    });
+</script>
+@endpush
 @endsection

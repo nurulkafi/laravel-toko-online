@@ -5,4 +5,5 @@
 
     <script src="{{ asset('admin/assets/js/script.js')}}"></script>
     <script src="{{ asset('admin/assets/js/main.js')}}"></script>
+    @stack('order')
     @stack('simditor')

@@ -20,4 +20,8 @@
     {{-- <link rel="stylesheet" href="{{ asset('admin/assets/css/bootstrap-icons.css')}}"> --}}
     <script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
     {{-- <link rel="shortcut icon" href="{{ asset('admin/assets/images/favicon.svg')}}" type="image/x-icon"> --}}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
 </head>
