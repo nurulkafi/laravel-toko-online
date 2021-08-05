@@ -27,7 +27,7 @@ class Product extends Model
     }
 
     public function productImage(){
-        return $this->hasMany('App\Models\ProductImage')->orderBy('id','DESC');
+        return $this->hasMany('App\Models\ProductImage')->orderBy('id','ASC');
     }
 
     public function productPriceMax(){

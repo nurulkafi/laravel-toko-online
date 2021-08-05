@@ -57,14 +57,15 @@ Route::group(['middleware' => ['role:Admin|Operator']],function () {
         Route::get('product/add', [ProductController::class, 'create']);
         Route::post('product/add_data', [ProductController::class, 'store']);
         Route::get('product/edit/{id}', [ProductController::class, 'edit']);
-        Route::put('product/update_data/{id}', [ProductController::class, 'update']);
+        Route::put('product/update/{id}', [ProductController::class, 'update']);
         Route::get('product/delete/{id}', [ProductController::class, 'destroy']);
-        //Product variant
-        Route::get('product_variant/edit/{id}', [ProductController::class, 'edit_pvariant']);
-        Route::put('product_variant/update', [ProductController::class, 'update_pvariant']);
-        Route::get('test', [TestController::class, 'index']);
-        Route::post('save', [TestController::class, 'save']);
-
+        Route::get('product/images/edit/{id}', [ProductController::class, 'editImage']);
+        Route::post('product/images/add/{id}', [ProductController::class, 'addImage']);
+        Route::get('product/images/delete/{id}', [ProductController::class, 'destroyImage']);
+        Route::get('product/atribute/edit/{id}',[ProductController::class, 'editAttribute']);
+        Route::post('product/atribute/add', [ProductController::class, 'addAttribute']);
+        Route::put('product/atribute/update/{id}', [ProductController::class, 'updateAtribute']);
+        Route::get('product/atribute/delete/{id}', [ProductController::class, 'destroyAtribute']);
         //role
         Route::get('role',[RoleController::class,'index']);
         Route::get('role/add', [RoleController::class, 'create']);
@@ -116,5 +117,4 @@ Route::POST('/payment/notification', [PaymentController::class, 'notification'])
 Route::get('completed', [PaymentController::class, 'completed']);
 Route::get('failed', [PaymentController::class, 'failed']);
 Route::get('unfinish', [PaymentController::class, 'unfinish']);
-
 

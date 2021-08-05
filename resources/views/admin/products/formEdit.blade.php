@@ -1,5 +1,21 @@
 @extends('admin.layouts.main');
-@section('Product','active')
+@section('sub-product', 'has-sub')
+@section('submenu-product')
+<ul class="submenu ">
+    <li class="submenu-item">
+        <a href="{{ url('admin/product') }}">Table Product</a>
+    </li>
+    <li class="submenu-item active">
+        <a href="{{ url('admin/product/edit/'.$product->id) }}">Product Info</a>
+    </li>
+    <li class="submenu-item ">
+        <a href="{{ url('admin/product/images/edit/'.$product->id) }}">Product Images</a>
+    </li>
+    <li class="submenu-item ">
+        <a href="{{ url('admin/product/atribute/edit/'.$product->id) }}">Product Atribute</a>
+    </li>
+</ul>
+@endsection
 @section('content')
     <section id="input-style">
         <div class="row">
@@ -10,29 +26,30 @@
                             <div class="col-md-6"><h4 class="card-title">Product</h4></div>
                             <div class="col-md-6">
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <a href="{{ url('admin/product_variant/edit/'.$data2->id) }}" class="btn btn-primary me-md-2">Edit Product Variant</a>
+                                    <a href="{{ url('admin/product_variant/edit/'.$product->id) }}" class="btn btn-primary me-md-2">Edit Product Variant</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="{{ url('admin/product/add_data') }}" enctype="multipart/form-data" >
+                        <form method="POST" action="{{ url('admin/product/update/'.$product->id) }}" enctype="multipart/form-data" >
+                            {{ method_field('PUT') }}
                             @csrf
                                 <div class="form-group">
-                                    <label for="name">Nama</label>
-                                    <input type="text" id="name" value="{{ $data2->name }}" class="form-control round" name="name" >
+                                    <label for="name">Name</label>
+                                    <input type="text" id="name" value="{{ $product->name }}" class="form-control round" name="name" >
                                 </div>
                                 <div class="form-group">
                                     <label for="">Category</label>
                                     <select name="parent" id="" class="form-select round">
+                                        <option value="{{ \App\Models\Category::cats($product->category_id)->id }}">{{ \App\Models\Category::cats($product->category_id)->parent->name }} / {{ \App\Models\Category::cats($product->category_id)->name }}</option>
                                         @foreach ($cats as $item)
-                                            {{-- @if ($item->parent_id == 0)
-                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                            @endif --}}
                                             @if ($item->childs->count()>0)
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                                                 @foreach ($item->childs as $subMenu)
+                                                    @if($item->cats($product->category_id)->parent->name != $item->name && $item->cats($product->category_id)->name != $subMenu->name )
                                                     <option value="{{ $subMenu->id }}" style="margin-left: 5px">{{ $item->name }} / {{ $subMenu->name }}</option>
+                                                    @endif
                                                 @endforeach
                                             @else
                                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -41,108 +58,38 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="deskripsi">Deskripsi</label>
-                                    <textarea type="text" class="form-control round" name="description"  id="editor">{!! $data2->description !!}</textarea>
+                                    <label for="deskripsi">Short description</label>
+                                    <textarea type="text" class="form-control round" name="short_description"  id="ed2itor">{{ $product->short_description }}</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label for="berat">Berat</label>
-                                    <input type="text" id="berat" class="form-control round" value="{{ $data2->weight }}" name="weight">
+                                    <label for="deskripsi">Description</label>
+                                    <textarea type="text" class="form-control round" name="description"  id="editor">{!! $product->description !!}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="berat">Weight</label>
+                                    <input type="text" id="berat" class="form-control round" value="{{ $product->weight }}" name="weight">
                                 </div>
                                 <div class="form-group">
                                     <label for="Status">Status</label>
                                     <select name="status" class="form-select" id="">
-                                        <option value="0">Draft</option>
-                                        <option value="1">Active</option>
-                                        <option value="2">Inactive</option>
+                                        @if ($product->status == 0)
+                                            <option value="0">Draft</option>
+                                            <option value="1">Active</option>
+                                            <option value="2">Inactive</option>
+                                        @elseif($product->status == 1)
+                                            <option value="1">Active</option>
+                                            <option value="0">Draft</option>
+                                            <option value="2">Inactive</option>
+                                        @else
+                                            <option value="2">Inactive</option>
+                                            <option value="1">Active</option>
+                                            <option value="0">Draft</option>
+                                        @endif
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="">Gambar</label>
-                                    <div class="row">
-                                        @for ($i = 0; $i < count($img); $i++)
-                                        <div class="col-md-2">
-                                            <input type="hidden" value="{{ $img[$i]->path }}" class="form-control" name="image[]">
-                                            <img class="img-thumbnail" height="200" width="200" src="{{ asset('storage/'.$img[$i]->path) }}" alt="">
-                                        </div>
-                                        @endfor
-                                    </div>
-                                    <div id="gambar"></div>
-                                </div>
-                                <div class="form-group">
-                                    <button id="addImages" class="btn btn-outline-success btn-sm" type="button">Tambah Foto</button>
-                                </div>
-                                <div class="form-group">
-                                    <br>
-                                    <h4>Product Variant</h4>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Color</label>
-                                    <input type="text" id="color" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Size</label>
-                                    <select name="" id="size" class="form-select">
-                                        <option value="XS">XS</option>
-                                        <option value="S">S</option>
-                                        <option value="L">L</option>
-                                        <option value="XL">XL</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Type</label>
-                                    <br>
-                                    <input type="radio" class="btn-check" name="tipe" id="short"
-                                    autocomplete="off" value="short">
-                                    <label class="btn btn-outline-dark" for="short">Short</label>
-
-                                    <input type="radio" class="btn-check" name="tipe"  id="Long"
-                                        autocomplete="off" value="long">
-                                    <label class="btn btn-outline-dark" for="Long">Long</label>
-                                    <input type="radio" class="btn-check"name="tipe"  id="No"
-                                        autocomplete="off" value=" ">
-                                    <label class="btn btn-outline-dark" for="No">No Type</label>
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Harga</label>
-                                    <input type="text" id="harga" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label for="">Qty</label>
-                                    <input type="text" id="qty" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary" id="btnAdd" type="button">Add</button>
-                                </div>
-                                <table id="variant_table" class="table table-bordered mb-0">
-                                    <tr>
-                                        {{-- <td>No</td> --}}
-                                        <td>Color</td>
-                                        <td>Size</td>
-                                        <td>Type</td>
-                                        <td>Harga</td>
-                                        <td>Qty</td>
-                                        <td>Action</td>
-                                    </tr>
-                                    <tbody>
-                                        @for ($i = 0; $i < count($data)/3; $i++)
-                                            @php
-                                                $index = $i * 3
-                                            @endphp
-                                            <tr>
-                                            @for ($j = $index; $j < 3 * ($i + 1); $j++)
-                                                <td>
-                                                    {{ $data[$j]->name}}
-                                                </td>
-                                            @endfor
-                                                <td>{{ $data[$i*3]->price }}</td>
-                                                <td>{{ $data[$i*3]->qty }}</td>
-                                            <tr>
-                                        @endfor
-                                    </tbody>
-                                </table>
                             </div>
                             <div class="form-group">
-                                <button class="btn btn-success" type="submit">Submit</button>
+                                <button class="btn btn-success float-end" type="submit" style="margin-right:20">Submit</button>
                             </div>
                         </form>
                     </div>

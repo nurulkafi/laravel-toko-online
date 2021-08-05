@@ -26,11 +26,12 @@
                                 <span>Categories</span>
                             </a>
                         </li>
-                        <li class="sidebar-item @yield('Product')">
+                        <li class="sidebar-item @yield('Product') @yield('sub-product')">
                             <a href="{{ url('admin/product') }}" class='sidebar-link'>
                                 <i class="bi bi-folder-fill"></i>
                                 <span>Products</span>
                             </a>
+                            @yield('submenu-product')
                         </li>
                         <li class="sidebar-item @yield('Orders') @yield('sub') ">
                             <a href="{{ url('admin/order') }}" class='sidebar-link'>

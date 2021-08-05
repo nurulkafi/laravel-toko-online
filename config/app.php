@@ -162,6 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Darryldecode\Cart\CartServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -229,5 +230,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'providers' => Spatie\Permission\PermissionServiceProvider::class,
         'Cart' => Darryldecode\Cart\Facades\CartFacade::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 ];

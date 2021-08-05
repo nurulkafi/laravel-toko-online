@@ -40,11 +40,11 @@ class ProductController extends Controller
     }
     public function searchPriceAndQty($id){
         $data = ProductAtribute::where('id',$id)->first();
-        echo json_encode($data);
+        return json_encode($data);
     }
     public function searchCity($id){
         $data = City::where('province_code', $id)->pluck('title', 'code');
-        echo json_encode($data);
+        return json_encode($data);
     }
     private function postData($key, $url, $data_origin, $data_destination, $data_weight, $data_courier)
     {
