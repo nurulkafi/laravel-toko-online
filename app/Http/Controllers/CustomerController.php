@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -100,5 +103,16 @@ class CustomerController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function orderinfo(){
+        $userID = Auth::user()->id;
+        if (Auth::check() != false) {
+            $cart = \Cart::session($userID)->getContent();
+        } else {
+            $cart = \Cart::getContent();
+        }
+        $order = Order::where('user_id',$userID)->where('status', '!=', Order::CANCELLED)->get();
+        $category = Category::get()->where('parent_id', 0);
+        return view('user.account.orderinfo',compact('cart','category','order'));
     }
 }

@@ -84,6 +84,9 @@ class Order extends Model
         $province = city::find($id);
         return $province->title;
     }
+    public function image(){
+        return $this->hasMany('App\Models\ProductImage');
+    }
     /**
      * Check order is paid or not
      *

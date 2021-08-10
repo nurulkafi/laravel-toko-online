@@ -17,7 +17,7 @@
               <div class="images-slider">
                 <ul class="slides">
                     @foreach ($product->productImage as $img)
-                    <li data-thumb="{{ asset('storage/'.$img->path)}}"> <img class="img-responsive" src="{{ asset('storage/'.$img->path) }}"  alt=""> </li>
+                    <li data-thumb="{{ asset('storage/'.$img->extra_large)}}"> <img class="img-responsive" src="{{ asset('storage/'.$img->path) }}"  alt=""> </li>
                     @endforeach
                 </ul>
               </div>
@@ -26,17 +26,14 @@
             <!-- COntent -->
             <div class="col-md-5">
               <h4>{{ $product->name }}</h4>
-              <span class="price" id="price"><small>Rp</small>{{ $product->productPriceMax->first()->price }}</span>
+              <span class="price" id="price"><small>Rp</small>{{ number_format($product->productPriceMax->first()->price) }}</span>
               <!-- Sale Tags -->
               <ul class="item-owner">
-                <li>Designer :<span> ABC Art</span></li>
-                <li>Stock :<span style="font-size: 20px;font-weight: bold" id="stock"> {{ $product->productPriceMax->first()->qty }}</span></li>
+                <li>Category :<span> <a href="{{ url('product/category/'.$product->category($product->category_id)->slug) }}">{{ $product->category($product->category_id)->name }}</a></span></li>
+                <li>Stock :<span style="color: black" id="stock"> {{ $product->productPriceMax->first()->qty }}</span></li>
               </ul>
 
               <!-- Item Detail -->
-              <p>
-                  {!! $product->description !!}
-              </p>
 
               <!-- Short By -->
               <div class="some-info">
@@ -47,12 +44,7 @@
                     <li class="col-xs-4">
                     <div class="quinty">
                       <!-- QTY -->
-                      <input type="text" name="qty" style="border:0.5px solid black" class="form-control">
-                      {{-- <select class="selectpicker">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                      </select> --}}
+                      <input type="number" name="qty" min="1" max="{{ $product->productPriceMax->first()->qty }}" style="border:0.5px solid black" class="form-control">
                     </div>
                   </li>
                   <li class="col-xs-4">
@@ -71,57 +63,6 @@
 
                   <!-- LIKE -->
                 </ul>
-
-                <!-- INFOMATION -->
-                <div class="inner-info">
-                  <h6>DELIVERY INFORMATION</h6>
-
-                  <p>
-                      <div class="row">
-                          <div class="col-md-6">
-                              <h6>From</h6>
-                              <div class="form-group">
-                                  <p for="">Provinsi</p>
-                                  <input type="text" disabled class="form-control" placeholder="Jawa Barat">
-                              </div>
-                              <div class="form-group">
-                                  <p for="">Kabupaten</p>
-                                  <input type="text" disabled class="form-control" placeholder="Bandung">
-                              </div>
-                              <div class="form-group">
-                                  <p>Courier </p>
-
-                                  <select name="" id="kurir" class="form-control">
-                                    <option value="">
-                                    </option>
-                                  </select>
-
-                              </div>
-                            </div>
-                          <div class="col-md-6">
-                              <h6>To</h6>
-
-                              <div class="form-group">
-                                  <p for="">Provinsi</p>
-                                  <select name="" id="provinsiTujuan"  class="form-control">
-                                      @foreach ($province as $item)
-                                          <option value="{{ $item->code }}">{{ $item->title }}</option>
-                                      @endforeach
-                                  </select>
-                              </div>
-                              <div class="form-group">
-                                  <p for="">Kabupaten / Kota</p>
-                                  <select name="" id="kotaTujuan"  class="form-control">
-                                    <option value="">&nbsp;</option>
-                                  </select>
-                              </div>
-                              <div class="form-group">
-                                  <p id="total_ongkir" style="font-size: 15px;margin-top:40px">Ongkos Kirim : Rp.50000</p>
-                              </div>
-                          </div>
-                      </div>
-                  </p>
-                </div>
               </div>
             </div>
           </div>
@@ -132,105 +73,14 @@
           <!-- Nav tabs -->
           <ul class="nav nav-tabs animate fadeInUp" data-wow-delay="0.4s" role="tablist">
             <li role="presentation" class="active"><a href="#descr" role="tab" data-toggle="tab">DESCRIPTION</a></li>
-            <li role="presentation"><a href="#review" role="tab" data-toggle="tab">REVIEW (03)</a></li>
-            <li role="presentation"><a href="#tags" role="tab" data-toggle="tab">INFORMATION</a></li>
           </ul>
 
           <!-- Tab panes -->
           <div class="tab-content animate fadeInUp" data-wow-delay="0.4s">
             <!-- DESCRIPTION -->
             <div role="tabpanel" class="tab-pane fade in active" id="descr">
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sed lectus id nisi interdum mollis. Nam congue tellus quis elit mattis congue. Aenean eu massa sed mauris hendrerit ornare sed eget ante.
-                Vestibulum id eros quam. Nunc volutpat at magna gravida eleifend. Phasellus sit amet nisi tempus, tincidunt elit ac, tempor metus. <br>
-              </p>
-              <h6>THE SIMPLE FACTS</h6>
-              <ul>
-                <li>
-                  <p>Praesent faucibus, leo vitae maximus dictum,</p>
-                </li>
-                <li>
-                  <p> Donec porta ut lectus </p>
-                </li>
-                <li>
-                  <p> Phasellus maximus velit id nisl</p>
-                </li>
-                <li>
-                  <p> Quisque a tellus et sapien aliquam sus</p>
-                </li>
-                <li>
-                  <p> Donec porta ut lectus </p>
-                </li>
-                <li>
-                  <p> Phasellus maximus velit id nisl</p>
-                </li>
-              </ul>
+              {!! $product->description !!}
             </div>
-
-            <!-- REVIEW -->
-            <div role="tabpanel" class="tab-pane fade" id="review">
-              <h6>3 REVIEWS FOR SHIP YOUR IDEA</h6>
-
-              <!-- REVIEW PEOPLE 1 -->
-              <div class="media">
-                <div class="media-left">
-                  <!--  Image -->
-                  <div class="avatar"> <a href="#"> <img class="media-object" src="images/avatar-1.jpg" alt=""> </a> </div>
-                </div>
-                <!--  Details -->
-                <div class="media-body">
-                  <p class="font-playfair">“Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                    labore et dolore magna aliqua.”</p>
-                  <h6>TYRION LANNISTER <span class="pull-right">MAY 10, 2016</span> </h6>
-                </div>
-              </div>
-
-              <!-- REVIEW PEOPLE 1 -->
-
-              <div class="media">
-                <div class="media-left">
-                  <!--  Image -->
-                  <div class="avatar"> <a href="#"> <img class="media-object" src="images/avatar-2.jpg" alt=""> </a> </div>
-                </div>
-                <!--  Details -->
-                <div class="media-body">
-                  <p class="font-playfair">“Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                    labore et dolore magna aliqua.”</p>
-                  <h6>TYRION LANNISTER <span class="pull-right">MAY 10, 2016</span> </h6>
-                </div>
-              </div>
-
-              <!-- ADD REVIEW -->
-              <h6 class="margin-t-40">ADD REVIEW</h6>
-              <form>
-                <ul class="row">
-                  <li class="col-sm-6">
-                    <label> *NAME
-                      <input type="text" value="" placeholder="">
-                    </label>
-                  </li>
-                  <li class="col-sm-6">
-                    <label> *EMAIL
-                      <input type="email" value="" placeholder="">
-                    </label>
-                  </li>
-                  <li class="col-sm-12">
-                    <label> *YOUR REVIEW
-                      <textarea></textarea>
-                    </label>
-                  </li>
-                  <li class="col-sm-6">
-                    <!-- Rating Stars -->
-                    <div class="stars"> <span>YOUR RATING</span> <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
-                  </li>
-                  <li class="col-sm-6">
-                    <button type="submit" class="btn btn-dark btn-small pull-right no-margin">POST REVIEW</button>
-                  </li>
-                </ul>
-              </form>
-            </div>
-
-            <!-- TAGS -->
-            <div role="tabpanel" class="tab-pane fade" id="tags"> </div>
           </div>
         </div>
         </form>

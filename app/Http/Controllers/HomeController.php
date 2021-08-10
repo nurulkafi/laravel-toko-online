@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -26,9 +27,14 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $product = Product::get();
-        $category = Category::get()->where('parent_id',0);
-        $cart = \Cart::getContent();
-        return view('user.home',compact('product','cart','category'));
+        if (Auth::check() != false) {
+            $userID = Auth::user()->id;
+            $cart = \Cart::session($userID)->getContent();
+        } else {
+            $cart = \Cart::getContent();
+        }
+        $product = Product::paginate(8);
+        $category = Category::get()->where('parent_id', 0);
+        return view('user.home', compact('product', 'cart', 'category'));
     }
 }

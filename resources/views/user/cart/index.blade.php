@@ -32,7 +32,9 @@
               <li class="col-sm-1"> </li>
             </ul>
           </div>
-
+          <form action="{{ url('cart/update') }}" method="POST">
+          @csrf
+          {{ method_field('PUT') }}
           @forelse ($cart as $item)
           @php
               $product = $item->associatedModel;
@@ -42,8 +44,7 @@
             <li class="col-sm-6">
               <div class="media">
                 <!-- Media Image -->
-                <div class="media-left media-middle"> <a href="#." class="item-img"> <img class="media-object" src="{{ asset('storage/'.$product->productImage->first()->path) }}" alt=""> </a> </div>
-
+                <div class="media-left media-middle"> <a href="#." class="item-img"> <img class="media-object" src="{{ asset('storage/'.$product->productImage->first()->small) }}" alt=""> </a> </div>
                 <!-- Item Name -->
                 <div class="media-body">
                   <div class="position-center-center">
@@ -64,7 +65,8 @@
               <div class="position-center-center">
                 <div class="quinty">
                   <!-- QTY -->
-                  <input type="number" value="{{ $item->quantity }}" style="border: 0.5px solid black" class="form-control">
+                  <input type="number" name="qty[]" value="{{ $item->quantity }}" style="border: 0.5px solid black" class="form-control">
+                  <input type="hidden" name="id[]" value="{{ $item->id }}">
                 </div>
               </div>
             </li>
@@ -88,8 +90,9 @@
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-5"></div>
-            <div class="col-sm-3"><a href="#." class="btn">update cart</a></div>
+            <div class="col-sm-3"><button  type="submit" class="btn">update cart</button></div>
         </div>
+        </form>
       </div>
     </section>
 
@@ -129,4 +132,11 @@
       </div>
     </section>
 </div>
+@push('detailproduct')
+<script>
+$(document).ready(function() {
+
+});
+</script>i
+@endpush
 @endsection

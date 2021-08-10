@@ -13,7 +13,7 @@
               <!-- ESTIMATE SHIPPING & TAX -->
               <div class="col-sm-7">
                 <h6>BILLING DETAILS</h6>
-                <form action="{{ url('coba') }}" method="POST">
+                <form action="{{ url('docheckout') }}" method="POST">
                   @csrf
                   <ul class="row">
                       <li class="col-md-6">
@@ -111,7 +111,15 @@
         </div>
       </div>
     </section>
-
+    {{-- berat --}}
+    @php
+        $berat = 0;
+    @endphp
+    @foreach ($cart as $item)
+        @php
+            $berat += $item->quantity * $item->associatedModel->weight;
+        @endphp
+    @endforeach
     <!-- About -->
     <section class="small-about padding-top-150 padding-bottom-150">
       <div class="container">
@@ -171,9 +179,9 @@
             $('#kurir').empty();
             $('.loading').show();
             let tujuan = $('#kotaTujuan').children("option:selected").val();
-            let berat = 300;
+            let berat = {{ $berat }};
             $.ajax({
-                url: '/cekongkir/'+tujuan+'/berat/'+berat+'/kurir/'+'jne',
+                url: '/cekongkir/'+tujuan+'/berat/'+berat,
                 type: 'get',
                 dataType: 'json',
                 success:function(data) {

@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Province;
 use App\Models\Payment;
+use App\Models\ProductAtribute;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -89,7 +90,6 @@ class OrderController extends Controller
 
             if ($order) {
                 \Cart::clear();
-
                 Alert::success('success', 'Thank you. Your order has been received!');
                 return redirect('order/confirm/'.$order->id);
             }
@@ -150,19 +150,27 @@ class OrderController extends Controller
                     'discount_percent' => 0,
                     'sub_total' => $itemSubTotal,
                 ];
-
                 $orderItem = OrderItem::create($orderItemParams);
+                if ($orderItem) {
+                    ProductAtribute::reduceStock($orderItem->product_atribut_id, $orderItem->qty);
+                }
             }
         }
     }
     private function _saveShipment($order)
     {
+        $userID = Auth::user()->id;
+        $cart = \Cart::session($userID)->getContent();
+        $berat = 0;
+        foreach ($cart as $item) {
+            $berat += $item->quantity * $item->associatedModel->weight;
+        }
         $shipmentParams = [
-            'user_id' => \Auth::user()->id,
+            'user_id' => $userID,
             'order_id' => $order->id,
             'status' => Shipment::PENDING,
             'total_qty' => \Cart::getTotalQuantity(),
-            'total_weight' => 2000,
+            'total_weight' => $berat,
             'first_name' => $order->customer_first_name,
             'last_name' => $order->customer_last_name,
             'email' => $order->customer_email,
@@ -173,7 +181,6 @@ class OrderController extends Controller
             'province_id' => $order->customer_province_id,
             'postcode' => 0,
         ];
-
         Shipment::create($shipmentParams);
     }
     public function confirm($id){

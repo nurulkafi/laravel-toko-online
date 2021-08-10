@@ -26,7 +26,7 @@
                             <a href="{{ url('product/category/'.$item->slug) }}"><h6><b>{{ $item->name }}</b></h6></a>
                             <ul>
                             @foreach ($item->childs as $subMenu)
-                                <li> <a href="{{ url('product/category/'.$subMenu->slug) }}">{{ $subMenu->name }}</a> </li>
+                                <li> <a href="{{ url('product/category/'.$item->slug.'/'.$subMenu->slug) }}">{{ $subMenu->name }}</a> </li>
                             @endforeach
                             </ul>
                         @else
@@ -50,11 +50,10 @@
               <li class="dropdown user-acc"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" ><i class="icon-user"></i> </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <h6>HELLO! {{ Auth::user()->name }}</h6>
+                    <h6>HELLO! {{ Auth::user()->name }} </h6>
                   </li>
-                  <li><a href="#">MY CART</a></li>
-                  <li><a href="#">ACCOUNT INFO</a></li>
-                  <li><a href="#">ORDER INFO</a></li>
+                  <li><a href="{{ url('cart') }}">MY CART</a></li>
+                  <li><a href="{{ url('order/info') }}">ORDER INFO</a></li>
                   <li><a href="{{ url('logout') }}">LOG OUT</a></li>
                 </ul>
               </li>
@@ -76,7 +75,7 @@
                   @endphp
                   <li>
                     <div class="media-left">
-                      <div class="cart-img"> <a href="#"> <img class="media-object img-responsive" src="{{ asset('storage/'.$product->productImage->first()->path) }}" alt="..."> </a> </div>
+                      <div class="cart-img"> <a href="#"> <img class="media-object img-responsive" src="{{ asset('storage/'.$product->productImage->first()->small) }}" alt="..."> </a> </div>
                     </div>
                     <div class="media-body">
                       <h6 class="media-heading">{{ $item->name }} {{ $item->attributes[0] }}</h6>
@@ -89,7 +88,7 @@
                   <li class="margin-0">
                     <div class="row">
                       <div class="col-xs-6"> <a href="{{ url('cart') }}" class="btn">VIEW CART</a></div>
-                      <div class="col-xs-6 "> <a href="checkout.html" class="btn">CHECK OUT</a></div>
+                      <div class="col-xs-6 "> <a href="{{ url('checkout') }}" class="btn">CHECK OUT</a></div>
                     </div>
                   </li>
                 </ul>

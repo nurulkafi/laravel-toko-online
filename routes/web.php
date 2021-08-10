@@ -12,10 +12,14 @@ use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,18 +31,24 @@ use Illuminate\Auth\Middleware\Authenticate;
 |
 */
 
+// [1] Admin [2] Customer [3] Operator
 Route::get('/home', function () {
-    return redirect('admin/dashboard');
+    $userID = Auth::user()->id;
+    $role = DB::table('model_has_roles')->where('model_id', $userID)->first();
+    if($role->role_id != 2){
+        return redirect('admin/dashboard');
+    }else{
+        return redirect('beranda');
+    }
 });
-// Route::get('admin/dashboard',[DashboardController::class,'index']);
-
+Route::get('beranda', [HomeController::class, 'index']);
 Auth::routes();
 Route::fallback(function () {
     $title = "404 Not Found";
     return view('admin.layouts.404', compact('title'));
 });
 Route::get('logout', function () {
-    \Auth::logout();
+    Auth::logout();
     return redirect('login');
 });
 
@@ -93,28 +103,33 @@ Route::post('product/search',[ControllersProductController::class,'searchForm'])
 Route::get('product/search/{id}', [ControllersProductController::class, 'resultSearch']);
 Route::get('product/detail/{slug}',[ControllersProductController::class, 'show']);
 Route::get('product/detail/search/{id}', [ControllersProductController::class, 'searchPriceAndQty']);
-
+Route::get('product/category/{slug}',[ControllersProductController::class,'searchCategory1']);
+Route::get('product/category/{slug}/{slug2}', [ControllersProductController::class, 'searchCategory2']);
 //Cart
 Route::get('cart',[CartController::class,'index']);
 Route::group(['middleware' => ['auth']],function () {
-    Route::post('cart/add',[CartController::class,'store']);
-    Route::get('checkout',[OrderController::class,'index']);
+Route::post('cart/add',[CartController::class,'store']);
+Route::put('cart/update',[CartController::class,'update']);
+Route::get('cart/remove/{id}',[CartController::class,'remove']);
+
 });
 //Api Raja Ongkir
 Route::get('province/search/{id}', [ControllersProductController::class, 'searchCity']);
-Route::get('cekongkir/{id}/berat/{berat}/kurir/{kurir}', [ControllersProductController::class, 'cekOngkir']);
+Route::get('cekongkir/{id}/berat/{berat}', [ControllersProductController::class, 'cekOngkir']);
 
 //Register
 Route::post('user/register',[CustomerController::class,'store']);
-// Route::get('register',[RegisterController::class,'index']);
-// Route::group(['middleware' => ['role:customer']],function () {
 
-Route::POST('coba', [OrderController::class, 'doCheckout']);
+//checkout
+Route::get('checkout',[OrderController::class,'index']);
+Route::POST('docheckout', [OrderController::class, 'doCheckout']);
 Route::get('order/confirm/{id}',[OrderController::class,'confirm']);
-// });
 
+//notif midtrans
 Route::POST('/payment/notification', [PaymentController::class, 'notification']);
 Route::get('completed', [PaymentController::class, 'completed']);
 Route::get('failed', [PaymentController::class, 'failed']);
 Route::get('unfinish', [PaymentController::class, 'unfinish']);
 
+//account
+Route::get('order/info',[CustomerController::class,'orderinfo']);

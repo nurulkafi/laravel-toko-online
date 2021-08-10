@@ -41,4 +41,8 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductAtribute');
     }
+    public function category($id){
+        $data = Category::findOrfail($id);
+        return $data;
+    }
 }

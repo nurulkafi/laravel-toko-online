@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductAtribute;
 use App\Models\Province;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\Console\Input\Input;
 
@@ -23,14 +24,18 @@ class ProductController extends Controller
         }else{
             $cart = \Cart::getContent();
         }
-        $product = Product::get();
+        $product = Product::paginate(10);
         $category = Category::get()->where('parent_id',0);
         return view('user.product.index',compact('product','cart', 'category'));
     }
     public function show($slug)
     {
-        $userID = Auth::user()->id;
-        $cart = \Cart::session($userID)->getContent();
+        if (Auth::check() != false) {
+            $userID = Auth::user()->id;
+            $cart = \Cart::session($userID)->getContent();
+        } else {
+            $cart = \Cart::getContent();
+        }
         $courier = Courier::get();
         $province = Province::get();
         $product = Product::where('slug',$slug)->first();
@@ -61,32 +66,16 @@ class ProductController extends Controller
         ]);
         //setelah $url itu adalah array yaitu parameter wajib yg dibutuhkan ketika meminta POST request
     }
-    public function cekOngkir($id,$berat,$kurir){
+    public function cekOngkir($id,$berat){
         $kurirs = array('jne' ,'pos','tiki');
-        $apiKey = 'e9cf1dd907c39459883d47f851ea7b86';
-        $kotaAsal = 23;
+        $apiKey = env('RAJA_ONGKIR_KEY');
+        $kotaAsal = 23; //kota bandung
         $kotaTujuan = $id;
         $url = 'https://api.rajaongkir.com/starter/cost';
-        // for ($i=0; $i < 3 ; $i++) {
-        //     # code...
-        //     $response[$i] = $this->postData($apiKey, $url, $kotaAsal, $kotaTujuan, $berat, $kurirs[$i]);
-
-        // }
-        $response = $this->postData($apiKey, $url, $kotaAsal, $kotaTujuan, $berat, $kurir);
-
-        if($kurir == 'jne'){
-            // echo json_encode($response['rajaongkir']['results'][0]['costs']);
-            // return json_decode($response->getBody(),true);
-            for ($i=0; $i < count($kurirs) ; $i++) {
-                # code...
-                $respons = $this->postData($apiKey, $url, $kotaAsal, $kotaTujuan, $berat, $kurirs[$i]);
-                $responses[] = json_decode(json_encode($respons['rajaongkir']), FALSE);
-            }
-            // return json_decode($responses);
-        }else{
-            echo json_encode($response['rajaongkir']['results'][0]['costs'][0]['cost'][0]['value']);
+        for ($i=0; $i < count($kurirs) ; $i++) {
+            $respons = $this->postData($apiKey, $url, $kotaAsal, $kotaTujuan, $berat, $kurirs[$i]);
+            $responses[] = json_decode(json_encode($respons['rajaongkir']), FALSE);
         }
-        // dd($response[0]->json(), $response[1]->json(), $response[2]->json());
         return json_decode(json_encode($responses), FALSE);
 
     }
@@ -95,9 +84,41 @@ class ProductController extends Controller
         return redirect('product/search/'.$input);
     }
     public function resultSearch($id){
+        if (Auth::check() != false) {
+            $userID = Auth::user()->id;
+            $cart = \Cart::session($userID)->getContent();
+        } else {
+            $cart = \Cart::getContent();
+        }
         $product = Product::where('name',$id)->get();
         $category = Category::get()->where('parent_id', 0);
-        return view('user.product.index', compact('product', 'category'));
+        dd($product);
+        return view('user.product.index', compact('product', 'category','cart'));
     }
-
+    public function searchCategory1($slug){
+        if (Auth::check() != false) {
+            $userID = Auth::user()->id;
+            $cart = \Cart::session($userID)->getContent();
+        } else {
+            $cart = \Cart::getContent();
+        }
+        $parent_cat = Category::where('slug', $slug)->first();
+        $child_cat = Category::where('parent_id', $parent_cat->id)->first();
+        $product = Product::where('category_id',$parent_cat->id)->orWhere('category_id', $child_cat->id)->paginate(10);
+        $category = Category::get()->where('parent_id', 0);
+        return view('user.product.index', compact('product', 'category','cart'));
+    }
+    public function searchCategory2($slug,$slug2)
+    {
+        if (Auth::check() != false) {
+            $userID = Auth::user()->id;
+            $cart = \Cart::session($userID)->getContent();
+        } else {
+            $cart = \Cart::getContent();
+        }
+        $cat = Category::where('slug',$slug2)->first();
+        $product = Product::where('category_id', $cat->id)->paginate(10);
+        $category = Category::get()->where('parent_id', 0);
+        return view('user.product.index', compact('product', 'category', 'cart'));
+    }
 }

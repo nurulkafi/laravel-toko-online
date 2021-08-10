@@ -1,4 +1,4 @@
-<div class="item-display">
+        <div class="item-display">
               <div class="row">
                 <div class="col-xs-6"> <span class="product-num">Showing 1 - 10 of {{ $product->count() }}</span> </div>
 
@@ -8,9 +8,9 @@
 
                     <!-- Short By -->
                     <select class="selectpicker">
-                      <option>Short By</option>
-                      <option>Short By</option>
-                      <option>Short By</option>
+                        <option>Short By</option>
+                        <option><a href="">Harga Terendah Ke Tertinggi</a></option>
+                        <option>Short By</option>
                     </select>
                     <!-- Filter By -->
                     <select class="selectpicker">
