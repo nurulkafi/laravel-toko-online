@@ -15,6 +15,19 @@
 @endsection
 @section('content')
 <div class="card">
+    <div class="card-title">
+        <br>
+        <div class="btn-group mb-3 float-end" role="group" style="margin-right: 20px">
+            <a class="btn btn-primary icon icon-left" href="{{ url('admin/order/printinvoice/'.$order->id) }}" target="_blank">
+                Print
+                <i class="bi bi-printer"></i>
+            </a>
+            <a target="_blank" class="btn btn-info" href="{{ url('admin/order/saveinvoice/'.$order->id) }}">
+                Save
+                <i class="bi bi-file-pdf"></i>
+            </a>
+        </div>
+    </div>
     <div class="card-content">
         <div class="card-body">
             <div class="row">
@@ -134,20 +147,20 @@
                     </div>
                     @if ($order->status != \App\Models\Order::DELIVERED && $order->status != \App\Models\Order::PROCESSED)
                     <div class="row" style="margin-top:10px">
-                        <div class="col-md-4"></div>
+                        <div class="col-md-6"></div>
                         <div class="col-md-4"><a href="{{ url('admin/order/process/'.$order->id) }}" class="btn btn-primary rounded-pill">Process Order</a></div>
-                        <div class="col-md-4"></div>
+                        <div class="col-md-2"></div>
                     </div>
                     @endif
                     <div class="row" style="margin-top:10px">
-                        <div class="col-md-4"></div>
+                        <div class="col-md-6"></div>
                         <div class="col-md-4"><a href="{{ url('admin/order/shipment/'.$order->id) }}" class="btn btn-info rounded-pill">Truck Number</a></div>
-                        <div class="col-md-4"></div>
+                        <div class="col-md-2"></div>
                     </div>
                     <div class="row" style="margin-top:10px">
-                        <div class="col-md-4"></div>
+                        <div class="col-md-6"></div>
                         <div class="col-md-4"><a href="" class="btn btn-danger rounded-pill">Cancel Order</a></div>
-                        <div class="col-md-4"></div>
+                        <div class="col-md-2"></div>
                     </div>
                 </div>
             </div>

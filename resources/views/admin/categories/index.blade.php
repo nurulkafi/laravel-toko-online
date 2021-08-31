@@ -4,16 +4,16 @@
 <div class="row" id="table-bordered">
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Table {{ $title }}</h4>
+            <div class="row">
+                <div class="col-md-6"><h4 class="card-title">Table {{ $title }}</h4></div>
+                <div class="col-md-6">
+                    <a href="categories/add" class="btn btn-primary float-end">Add Category</a>
+                </div>
+            </div>
         </div>
         <div class="card-content">
-            <div class="card-body" style="margin-top:-40px">
-                <a href="categories/add" class="btn btn-primary">
-                    <span>Tambah Data</span>
-                </a>
-            </div>
             <div class="table-responsive">
-                <table class="table table-bordered mb-0">
+                <table class="table table-bordered mb-0" id="table1">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -74,4 +74,11 @@
         </div>
     </div>
 </div>
+@push('simpleDataTable')
+<script src="{{ asset('admin/assets/vendors/simple-datatables/simple-datatables.js') }}"></script>
+<script>
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
+</script>
+@endpush
 @endsection

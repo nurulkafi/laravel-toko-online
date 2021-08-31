@@ -24,11 +24,6 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-md-6"><h4 class="card-title">Product</h4></div>
-                            <div class="col-md-6">
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                    <a href="{{ url('admin/product_variant/edit/'.$product->id) }}" class="btn btn-primary me-md-2">Edit Product Variant</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="card-body">

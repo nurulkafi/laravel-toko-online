@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Str;
@@ -16,12 +17,18 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         //
+
         $title = "Categories";
         $data = Category::get();
-        return view('admin.categories.index',compact('title','data'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.categories.index',compact('title','data', 'newOrders'));
     }
 
     /**
@@ -33,7 +40,8 @@ class CategoryController extends Controller
     {
         $title = "Add Categories";
         $data = Category::get()->where('parent_id',0);
-        return view('admin.categories.formAdd', compact('title','data'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.categories.formAdd', compact('title','data','newOrders'));
 
     }
 
@@ -87,7 +95,8 @@ class CategoryController extends Controller
         $data = Category::find($id);
         $title = "Edit Data";
         $data2 = Category::get()->where('parent_id',0);
-        return view('admin.categories.formEdit',compact('data','title','data2'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.categories.formEdit',compact('data','title','data2','newOrders'));
     }
 
     /**

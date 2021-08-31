@@ -13,10 +13,15 @@ use RealRashid\SweetAlert\Facades\Alert;
 class ShipmentController extends Controller
 {
     //
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index($id){
         $title = "Shipment";
         $shipment = Shipment::get()->where('order_id',$id)->first();
-        return view('admin.shipments.index',compact('title','shipment'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.shipments.index',compact('title','shipment','newOrders'));
     }
     public function store(Request $request,$id){
         $order = Order::findOrfail($id);

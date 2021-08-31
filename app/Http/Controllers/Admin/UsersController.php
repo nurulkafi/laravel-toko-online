@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Role;
 
@@ -15,11 +17,16 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         //
         $data = User::orderBy('id','DESC')->get();
-        return view('admin.users.index',compact('data'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.users.index',compact('data', 'newOrders'));
     }
 
     /**
@@ -31,7 +38,8 @@ class UsersController extends Controller
     {
         //
         $roles = Role::get();
-        return view('admin.users.formAdd',compact('roles'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.users.formAdd',compact('roles','newOrders'));
     }
 
     /**
@@ -89,7 +97,11 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        $user = User::findOrFail($id);
+        $userRole = $user->roles->first();
+        $roles = Role::get();
+        return view('admin.users.formEdit',compact('user','userRole','roles', 'newOrders'));
     }
 
     /**
@@ -102,6 +114,33 @@ class UsersController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $user = User::find($id);
+        $name = $request->name;
+        $email = $request->email;
+        $password = $request->password;
+        $role = $request->role;
+
+        // $request->validate([
+        //     'name' => 'required',
+        //     'email' => 'required|email|unique:users,email',
+        //     'password' => 'required|same:confirm-password',
+        //     'roles' => 'requird'
+        // ]);
+
+        $saved = $user->update([
+            'name' => $name,
+            'email' => $email,
+            'password' => bcrypt($password)
+        ]);
+        if ($saved) {
+            DB::table('model_has_roles')->where('model_id', $id)->delete();
+            $user->assignRole($role);
+            Alert::success('Success', 'Update Data! ');
+            return redirect('admin/users');
+        } else {
+            Alert::failed('ok', 'ok');
+            return redirect('admin/users');
+        }
     }
 
     /**
@@ -113,5 +152,9 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
+        $user = User::findOrFail($id);
+        $user->delete();
+        Alert::success('Success','Delete User!');
+        return redirect('admin/users');
     }
 }

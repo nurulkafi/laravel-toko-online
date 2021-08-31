@@ -7,16 +7,12 @@
             <h4 class="card-title">Table {{ $title }}</h4>
         </div>
         <div class="card-content">
-            <div class="card-body" style="margin-top:-40px">
-                {{-- @can('product-add') --}}
-                <a href="product/add" class="btn btn-primary">
-                    <span>Tambah Data</span>
-                </a>
-                {{-- @endcan --}}
-            </div>
             <div class="table-responsive">
-                <table class="table table-bordered mb-0 data-table">
+                <table class="table table-bordered mb-0 data-table" id="table1">
                     <thead>
+                        @can('list-care')
+
+                        @endcan
                         <tr>
                             <th>#</th>
                             <th>Status</th>
@@ -26,6 +22,27 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @forelse ($order as $item)
+                            @if ($item->status == \App\Models\Order::CONFIRMED)
+                            <tr class="table-info">
+                                <td>{{ $item->code }}</td>
+                                <td>{{ $item->status }}</td>
+                                <td>{{ $item->order_date }}</td>
+                                <td>{{ $item->payment_status }}</td>
+                                <td><a href="{{ url('admin/order/show/'.$item->id) }}" class="btn btn-info">Show</a></td>
+                            </tr>
+                            @else
+                            <tr>
+                                <td>{{ $item->code }}</td>
+                                <td>{{ $item->status }}</td>
+                                <td>{{ $item->order_date }}</td>
+                                <td>{{ $item->payment_status }}</td>
+                                <td><a href="{{ url('admin/order/show/'.$item->id) }}" class="btn btn-info">Show</a></td>
+                            </tr>
+                            @endif
+                        @empty
+
+                        @endforelse
                     </tbody>
                 </table>
                 {{-- modal --}}
@@ -61,23 +78,11 @@
         </div>
     </div>
 </div>
-@push('order')
-<script type="text/javascript">
-  $(function () {
-
-    var table = $('.data-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('orders.index') }}",
-        columns: [
-            {data: 'code', name: 'code'},
-            {data: 'status', name: 'status'},
-            {data: 'order_date', name: 'order_date'},
-            {data: 'payment_status', name: 'payment_status'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
-        ]
-    });
-  });
+@push('simpleDataTable')
+<script src="{{ asset('admin/assets/vendors/simple-datatables/simple-datatables.js') }}"></script>
+<script>
+        let table1 = document.querySelector('#table1');
+        let dataTable = new simpleDatatables.DataTable(table1);
 </script>
 @endpush
 @endsection

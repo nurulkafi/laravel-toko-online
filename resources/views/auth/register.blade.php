@@ -58,54 +58,10 @@
                         {{ "*".$message }}
                        @enderror
                     </li>
-                    <li class="col-md-6">
-                      <label> *PHONE
-                        <input type="text" name="phone" value="{{ old('phone') }}" placeholder="">
-                        </label>
-                    @error('phone')
-                        {{ "*".$message }}
-                    @enderror
-                    </li>
 
                     <!-- LAST NAME -->
 
                     <!-- LAST NAME -->
-                    <li class="col-md-6">
-                      <label> *CONFIRM-PASSWORD
-                        <input type="password" name="confirmed-password" value="" placeholder="">
-                      </label>
-                      @error('confirmed-password')
-                        {{ "*".$message }}
-                    @enderror
-                    </li>
-                    <li class="col-md-6">
-                        <!-- ADDRESS -->
-                        <label>*PROVINCE
-                            <select name="" id="provinsiTujuan"  class="selectpicker">
-                                      @foreach ($province as $item)
-                                          <option value="{{ $item->code }}">{{ $item->title }}</option>
-                                      @endforeach
-                            </select>
-                        </label>
-                    </li>
-                    <li class="col-md-6">
-                      <!-- ADDRESS -->
-                      <label>*CITY
-                        <select name="city_id" id="kotaTujuan"  class="selectpicker">
-                                    <option value="{{ old('first_name') }}">&nbsp;</option>
-                        </select>
-                      </label>
-                    </li>
-
-                    <!-- COUNTRY -->
-                    <li class="col-md-12">
-                      <label> *ADDRESS
-                        <textarea name="address" style="border: 0.5px solid black;border-radius: 0%;margin-top:10px" class="form-control" name="address" id="message" rows="5" placeholder="">{{ old('address') }}</textarea>
-                      </label>
-                    </li>
-
-
-
                     <!-- PHONE -->
                     <li class="col-md-6">
                       <button type="submit" class="btn">REGISTER NOW</button>

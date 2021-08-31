@@ -1,15 +1,12 @@
 @extends('admin.layouts.main')
-@section('Product','active')
+@section('Revenue','active')
 @section('content')
 <div class="row" id="table-bordered">
     <div class="card">
         <div class="card-header">
-            <div class="row">
-                <div class="col-md-6"><h4 class="card-title">Table {{ $title }}</h4></div>
-                <div class="col-md-6">
-                    <a href="product/add" class="btn btn-primary float-end">Add Product</a>
-                </div>
-            </div>
+        <div class="row">
+            <div class="col-md-6"><h4 class="card-title">Table {{ $title }}</h4></div>
+        </div>
         </div>
         <div class="card-content">
             <div class="card-body" style="margin-top:-40px">
@@ -17,37 +14,25 @@
                     <table class="table table-striped" id="table1">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Slug</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>No</th>
+                                <th>Month</th>
+                                <th>Revenue</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @php
-                                $i = 1;
-                            @endphp
-                            @foreach ($data as $item)
+                        @php
+                            $month = ["January","Februry","March","April",
+                                      "May" , "June" , "July" , "August",
+                                      "Sepetember","October","November","Desember"];
+                            $i = 0;
+                        @endphp
+                        @foreach ($revenue as $item)
                             <tr>
-                                <td>{{ $i++ }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td>{{ $item->slug }}</td>
-                                <td>
-                                    @if ($item->status == 0)
-                                        Draft
-                                    @elseif($item->status == 1)
-                                        Active
-                                    @else
-                                        Inactive
-                                    @endif
-                                </td>
-                                <td>
-                                    <a href="product/edit/{{ $item->id }}" class="btn btn-sm btn-info">Edit</a>
-                                    <a class="btn btn-sm btn-danger hapusClickP" data-bs-toggle="modal" data-bs-target="#default" data-id="{{ $item->id }}">Delete</a>
-                                </td>
+                                <th>{{ $i+1 }}</th>
+                                <th>{{ $month[$i++] }}</th>
+                                <th> {{$item}} </th>
                             </tr>
-                            @endforeach
+                        @endforeach
+                        <tbody>
                         </tbody>
                     </table>
                     {{-- modal --}}
@@ -88,7 +73,9 @@
 <script src="{{ asset('admin/assets/vendors/simple-datatables/simple-datatables.js') }}"></script>
 <script>
         let table1 = document.querySelector('#table1');
-        let dataTable = new simpleDatatables.DataTable(table1);
+        let dataTable = new simpleDatatables.DataTable(table1,{
+            paging: false,
+        });
 </script>
 @endpush
 @endsection

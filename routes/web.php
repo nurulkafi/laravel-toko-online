@@ -5,8 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\ShipmentController;
+use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -82,20 +84,32 @@ Route::group(['middleware' => ['role:Admin|Operator']],function () {
         Route::post('role/add_data', [RoleController::class, 'store']);
         Route::get('role/edit/{id}',[RoleController::class,'edit']);
         Route::put('role/update_data/{id}',[RoleController::class,'update']);
-
+        Route::get('role/delete/{id}',[RoleController::class,'destroy']);
         //user
         Route::get('users', [UsersController::class, 'index']);
         Route::get('users/add', [UsersController::class, 'create']);
         Route::post('users/add_data', [UsersController::class, 'store']);
-
+        Route::get('users/edit/{id}',[UsersController::class,'edit']);
+        Route::put('users/update/{id}', [UsersController::class, 'update']);
+        Route::get('users/delete/{id}',[UsersController::class,'destroy']);
         //admin-orders
         Route::get('order',[AdminOrderController::class,'index'])->name('orders.index');
         Route::get('order/show/{id}', [AdminOrderController::class, 'show']);
         Route::get('order/process/{id}', [AdminOrderController::class, 'process']);
-
+        Route::get('order/printinvoice/{id}',[AdminOrderController::class,'print']);
+        Route::get('order/saveinvoice/{id}', [AdminOrderController::class, 'saveinvoice']);
+        //shipment
         Route::get('order/shipment/{id}',[ShipmentController::class,'index']);
         Route::post('order/shipment/save/{id}', [ShipmentController::class, 'store']);
-        });
+        //slider
+        Route::get('slider',[SliderController::class,'index']);
+        Route::get('slider/add',[SliderController::class,'create']);
+        Route::post('slider/add_data', [SliderController::class, 'store']);
+
+        Route::get('slider/delete/{id}', [SliderController::class, 'destroy']);
+        //Report
+        Route::get('report/revenue/{year}',[ReportController::class,'revenue']);
+    });
 });
 //Product For User
 Route::get('product', [ControllersProductController::class, 'index']);

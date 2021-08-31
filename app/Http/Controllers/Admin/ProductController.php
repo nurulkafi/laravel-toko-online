@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\ProductAtribute;
 use App\Models\ProductImage;
 use Facade\Ignition\Support\FakeComposer;
@@ -26,12 +27,17 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         //
         $data = Product::get();
         $title = 'Products';
-        return view('admin.products.index',compact('data','title'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.products.index',compact('data','title', 'newOrders'));
     }
 
     /**
@@ -59,7 +65,8 @@ class ProductController extends Controller
     {
         $title = "Add Product";
         $data = Category::get()->where('parent_id',0);
-        return view('admin.products.formAdd',compact('title','data'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.products.formAdd',compact('title','data','newOrders'));
     }
 
     /**
@@ -174,18 +181,21 @@ class ProductController extends Controller
         $title = "Edit Product";
         $product = Product::find($id);
         $cats = Category::get()->where('parent_id', 0);
-        return view('admin.products.formEdit', compact('title','cats','product'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.products.formEdit', compact('title','cats','product','newOrders'));
     }
     public function editImage($id)
     {
         $title = "Edit Product Image";
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
         $productimg = DB::table('product_images')->where('product_id',$id)->get();
-        return view('admin.products.formEditImage', compact('title', 'productimg'));
+        return view('admin.products.formEditImage', compact('title', 'productimg','newOrders'));
     }
     public function editAttribute($id){
         $title = "Edit Product Attribute";
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
         $product = DB::table('product_atributes')->where('product_id',$id)->get();
-        return view('admin.products.formEditAttribute',compact('title','product'));
+        return view('admin.products.formEditAttribute',compact('title','product','newOrders'));
     }
     public function updateAtribute($id,Request $request){
         $productatr = ProductAtribute::findOrfail($id);

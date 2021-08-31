@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 use Spatie\Permission\Models\Permission;
@@ -15,11 +16,16 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         //
         $role = Role::all();
-        return view('admin.roles.index',compact('role'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.roles.index',compact('role', 'newOrders'));
     }
 
     /**
@@ -31,7 +37,8 @@ class RoleController extends Controller
     {
         //
         $permission = Permission::all();
-        return view('admin.roles.formAdd',compact('permission'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.roles.formAdd',compact('permission','newOrders'));
     }
 
     /**
@@ -46,7 +53,7 @@ class RoleController extends Controller
         $role = Role::create(['name' => $request->name]);
         $role->syncPermissions($request->input('permission'));
 
-        Alert::success('Ok','Ok');
+        Alert::success('Success','Add Role!');
         return redirect('admin/role');
     }
 
@@ -71,12 +78,13 @@ class RoleController extends Controller
     {
         //
         $role = Role::find($id);
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
         $permission = Permission::get();
         $rolePermission = DB::table('role_has_permissions')
                           ->where('role_has_permissions.role_id',$id)
                           ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
                           ->all();
-        return view('admin.roles.formEdit',compact('role','permission','rolePermission'));
+        return view('admin.roles.formEdit',compact('role','permission','rolePermission','newOrders'));
     }
 
     /**
@@ -94,7 +102,7 @@ class RoleController extends Controller
         $role->save();
 
         $role->syncPermissions($request->permission);
-        Alert::success('Ok', 'Ok');
+        Alert::success('Success', 'Update Role!');
         return redirect('admin/role');
     }
 
@@ -106,6 +114,10 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        $role = Role::findOrFail($id);
+        $role->delete();
+        Alert::success('Success','Delete Role!');
+        return redirect('admin/role');
         //
     }
 }

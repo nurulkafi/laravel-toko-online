@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Slider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,7 @@ class HomeController extends Controller
         }
         $product = Product::paginate(8);
         $category = Category::get()->where('parent_id', 0);
-        return view('user.home', compact('product', 'cart', 'category'));
+        $slider = Slider::where('status',1)->get();
+        return view('user.home', compact('product', 'cart', 'category','slider'));
     }
 }

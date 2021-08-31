@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PDF;
 use RealRashid\SweetAlert\Facades\Alert;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -17,24 +18,17 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index(Request $request)
     {
         //
         $title = "Order";
-        if ($request->ajax()) {
-            $data = Order::select('*');
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function ($row) {
-
-                    $btn = '<a href="/admin/order/show/'.$row->id.'" class="edit btn btn-primary btn-sm">Show</a>';
-
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->make(true);
-        }
-        return view('admin.orders.index',compact('title'));
+        $order = Order::get();
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.orders.index',compact('title', 'newOrders','order'));
     }
 
     /**
@@ -74,7 +68,8 @@ class OrderController extends Controller
         ->where('order_id', $id)
         ->get();
         $title = "Order Info";
-        return view('admin.orders.show',compact('title','order','order_items'));
+        $newOrders = Order::where('status', Order::CONFIRMED)->get();
+        return view('admin.orders.show',compact('title','order','order_items','newOrders'));
     }
     public function process($id){
         $order = Order::findOrfail($id);
@@ -85,6 +80,30 @@ class OrderController extends Controller
         $order->save();
         Alert::success('success','Order On Process');
         return redirect('admin/order');
+    }
+    public function print($id){
+        $order = Order::find($id);
+        $order_items = DB::table('order_items')
+        ->select('sku', 'size', 'name', 'price', 'order_items.qty')
+        ->join('products', 'products.id', '=', 'order_items.product_id')
+        ->join('product_atributes', 'product_atributes.id', '=', 'order_items.product_atribut_id')
+        ->where('order_id', $id)
+        ->get();
+        return view('admin.orders.print',compact('order','order_items'));
+    }
+    public function saveinvoice($id)
+    {
+        $order = Order::find($id);
+        $order_items = DB::table('order_items')
+        ->select('sku', 'size', 'name', 'price', 'order_items.qty')
+        ->join('products', 'products.id', '=', 'order_items.product_id')
+        ->join('product_atributes', 'product_atributes.id', '=', 'order_items.product_atribut_id')
+        ->where('order_id', $id)
+        ->get();
+        $pdf = PDF::loadView('admin.orders.print', compact('order','order_items'));
+        $pdf->setPaper('A4', 'landscape');
+        return $pdf->download('invoice-pdf.pdf');
+
     }
 
     /**

@@ -92,7 +92,6 @@ class ProductController extends Controller
         }
         $product = Product::where('name',$id)->get();
         $category = Category::get()->where('parent_id', 0);
-        dd($product);
         return view('user.product.index', compact('product', 'category','cart'));
     }
     public function searchCategory1($slug){
