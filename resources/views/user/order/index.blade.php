@@ -185,10 +185,6 @@
                 type: 'get',
                 dataType: 'json',
                 success:function(data) {
-                    // $('#total_ongkir').html("Ongkos Kirim : Rp."+data);
-                    // $.each(response[0]['costs'].results, function(key,result) {
-                    //     console.log(result.service)
-                    // })
                     $('.loading').hide();
                     $('#selectkurir').show();
                     $('#kurir').append('<option>--Select Courier--</option>')

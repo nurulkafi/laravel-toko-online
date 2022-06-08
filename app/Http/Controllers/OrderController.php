@@ -77,7 +77,7 @@ class OrderController extends Controller
         return Order::create($save);
     }
     public function doCheckout(Request $request){
-            $order = DB::transaction(
+        $order = DB::transaction(
                     function () use ($request) {
                         $order = $this->_saveOrder($request);
                         $this->_saveOrderItems($order);

@@ -26,7 +26,6 @@ class CreatePaymentsTable extends Migration
             $table->string('vendor_name')->nullable();
             $table->string('biller_code')->nullable();
             $table->string('bill_key')->nullable();
-            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('order_id')->references('id')->on('orders');

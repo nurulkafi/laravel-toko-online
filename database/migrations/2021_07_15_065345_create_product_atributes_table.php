@@ -17,8 +17,8 @@ class CreateProductAtributesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->string('sku');
-            $table->int('price');
-            $table->int('qty');
+            $table->integer('price');
+            $table->integer('qty');
             $table->string('size');
             $table->timestamps();
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

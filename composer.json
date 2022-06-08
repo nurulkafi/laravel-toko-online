@@ -15,7 +15,7 @@
         "laravel-lang/lang": "~7.0",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
-        "midtrans/midtrans-php": "^2.4",
+        "midtrans/midtrans-php": "^2.5",
         "realrashid/sweet-alert": "^4.0",
         "spatie/laravel-permission": "^4.2",
         "yajra/laravel-datatables": "1.5"

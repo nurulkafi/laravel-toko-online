@@ -77,7 +77,6 @@ class ProductController extends Controller
             $responses[] = json_decode(json_encode($respons['rajaongkir']), FALSE);
         }
         return json_decode(json_encode($responses), FALSE);
-
     }
     public function searchForm(Request $request){
         $input = $request->searchName;
