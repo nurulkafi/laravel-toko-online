@@ -32,7 +32,9 @@ use Illuminate\Support\Facades\DB;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('',function(){
+    return redirect('login');
+});
 // [1] Admin [2] Customer [3] Operator
 Route::get('/home', function () {
     $userID = Auth::user()->id;
